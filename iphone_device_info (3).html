@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Device Info Scan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding-top: 60px;
+    }
+    #progressContainer {
+      width: 80%;
+      background-color: #ddd;
+      margin: 40px auto;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    #progressBar {
+      height: 30px;
+      width: 0%;
+      background-color: #4caf50;
+      text-align: center;
+      line-height: 30px;
+      color: white;
+    }
+    #info {
+      margin-top: 30px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Scanning Device Info...</h1>
+
+  <div id="progressContainer">
+    <div id="progressBar">0%</div>
+  </div>
+
+  <p id="info">Gathering info...</p>
+
+  <script>
+    // Animate progress bar
+    let progress = 0;
+    let interval = setInterval(() => {
+      progress += 1;
+      document.getElementById("progressBar").style.width = progress + "%";
+      document.getElementById("progressBar").innerText = progress + "%";
+      if (progress >= 100) clearInterval(interval);
+    }, 40);
+
+    // Fetch IP and show user agent
+    async function fetchInfo() {
+      try {
+        const res = await fetch("https://api.ipify.org?format=json");
+        const data = await res.json();
+        const ua = navigator.userAgent;
+
+        document.getElementById("info").innerHTML = `
+          <strong>IP:</strong> ${data.ip} <br>
+          <strong>Device:</strong> ${ua}
+        `;
+      } catch (error) {
+        document.getElementById("info").innerText = "Failed to fetch IP info.";
+      }
+    }
+
+    fetchInfo();
+  </script>
+
+</body>
+</html>
